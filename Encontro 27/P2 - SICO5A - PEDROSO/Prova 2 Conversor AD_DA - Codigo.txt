@@ -1,0 +1,76 @@
+// CODIGO CONVERSOR A/D
+//
+void setup()
+{
+  pinMode(10, OUTPUT);
+  Serial.begin(57600);
+}
+
+int transmitido;
+int convertido;
+int leitura;
+int conversao4bits;
+int bits[3];
+
+void loop()
+{
+	//leitura analogica do pino de entrada A0
+    leitura = analogRead(A0);
+  	//fazer a conversão dos valores em 8 faixas 0-7
+    conversao4bits = map(leitura, 0, 1023, 0, 7);
+
+      switch (conversao4bits) {
+        case 0://000
+         bits[0] = 0;
+      	 bits[1] = 0;
+         bits[2] = 0;
+          break;
+        case 1://001
+          bits[0] = 0;
+      	  bits[1] = 0;
+          bits[2] = 1;
+          break;
+        case 2://010
+          bits[0] = 0;
+      	  bits[1] = 1;
+          bits[2] = 0;
+          break;
+        case 3://011
+          bits[0] = 0;
+      	  bits[1] = 1;
+          bits[2] = 1;
+          break;
+        case 4://100
+          bits[0] = 1;
+      	  bits[1] = 0;
+          bits[2] = 0;
+          break;
+        case 5://101
+          bits[0] = 1;
+      	  bits[1] = 0;
+          bits[2] = 1;
+          break;
+        case 6://110
+          bits[0] = 1;
+      	  bits[1] = 1;
+          bits[2] = 0;
+          break;
+        case 7://111
+          bits[0] = 1;
+      	  bits[1] = 1;
+          bits[2] = 1;
+          break;
+        default://NADA
+          Serial.println(-1,DEC);
+      }
+	  
+  	  //conversão de binario para decimal
+      transmitido = (bits[0] * 4) + (bits[1] * 2) + (bits[2]);
+      convertido = map(transmitido, 0, 7, 0, 255);
+      Serial.println(convertido, DEC);
+      digitalWrite(10,convertido);
+
+  delay(5);
+}
+
+
