@@ -1,0 +1,48 @@
+// DA
+//
+void setup()
+{
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+  pinMode(4, INPUT);
+  pinMode(6, INPUT);
+  pinMode(7, OUTPUT);
+  Serial.begin(57600);
+  digitalWrite(7, HIGH);
+}
+
+int transmitido;
+int convertido;
+int sinc1 = 0;
+int sinc2 = 1;
+int sincAux;
+int aux[3];
+
+void loop()
+{
+    sincAux = digitalRead(6);
+    
+      if (sinc2 == 1) {
+        sinc2 = 0;
+        digitalWrite(6, LOW);
+      } else {
+        sinc2 = 1;
+        digitalWrite(6, HIGH);
+      }
+
+    if (sinc2 != sincAux) {
+
+      sinc1 = sincAux;
+
+      aux[0] = digitalRead(2);
+      aux[1] = digitalRead(3);
+      aux[2] = digitalRead(4);
+
+      transmitido = (aux[0] * 4) + (aux[1] * 2) + (aux[2]);
+      convertido = map(transmitido, 0, 7, 0, 1023);
+      Serial.println(convertido, DEC);
+
+  delay(25);
+
+}
+}// loop

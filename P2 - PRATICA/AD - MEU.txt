@@ -1,0 +1,91 @@
+// C++ code
+//
+void setup()
+{
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, INPUT);
+
+  Serial.begin(57600);
+  digitalWrite(6, HIGH);
+}
+
+int leitura;
+int conversao;
+int sinc1 = 1;
+int sinc2 = 0;
+int sincAux;
+
+void loop()
+{
+
+    leitura = analogRead(A0);
+    conversao = map(leitura, 0, 1023, 0, 7);
+
+    sincAux = digitalRead(7);
+
+    if (sinc2 != sincAux) {
+
+      sinc2 = digitalRead(7);
+
+      switch (conversao) {
+        case 0://000
+          digitalWrite(2, LOW);
+          digitalWrite(3, LOW);
+          digitalWrite(4, LOW);
+          break;
+        case 1://001
+          digitalWrite(2, LOW);
+          digitalWrite(3, LOW);
+          digitalWrite(4, HIGH);
+          break;
+        case 2://010
+          digitalWrite(2, LOW);
+          digitalWrite(3, HIGH);
+          digitalWrite(4, LOW);
+          break;
+        case 3://011
+          digitalWrite(2, LOW);
+          digitalWrite(3, HIGH);
+          digitalWrite(4, HIGH);
+          break;
+        case 4://100
+          digitalWrite(2, HIGH);
+          digitalWrite(3, LOW);
+          digitalWrite(4, LOW);
+          break;
+        case 5://101
+          digitalWrite(2, HIGH);
+          digitalWrite(3, LOW);
+          digitalWrite(4, HIGH);
+          break;
+        case 6://110
+          digitalWrite(2, HIGH);
+          digitalWrite(3, HIGH);
+          digitalWrite(4, LOW);
+          break;
+        case 7://111
+          digitalWrite(2, HIGH);
+          digitalWrite(3, HIGH);
+          digitalWrite(4, HIGH);
+          break;
+        default://NADA
+          Serial.println("ERRO");
+      }
+
+      if (sinc1 == 1) {
+        sinc1 = 0;
+        digitalWrite(6, LOW);
+      } else {
+        sinc1 = 1;
+        digitalWrite(6, HIGH);
+      }
+
+  delay(25);
+    }
+}
+
+
+

@@ -1,0 +1,69 @@
+// C++ code
+//
+void setup()
+{
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+  pinMode(4, INPUT);
+  pinMode(6, INPUT);
+  pinMode(7, OUTPUT);
+  Serial.begin(57600);
+  digitalWrite(7, HIGH);
+}
+
+int ptr = 0;
+int ptr2 = 0;
+
+int transmitido[200];
+int convertido[200];
+int sinc1 = 0;
+int sinc2 = 1;
+int sincAux;
+int aux[3];
+
+void loop()
+{
+  if (ptr < 200) {
+    ptr++;
+  } else if (ptr2 < 201) {
+
+    sincAux = digitalRead(6);
+    if (ptr2 == 0) {
+      ptr2++;
+      sinc1 = sincAux;
+      if (sinc2 == 1) {
+        sinc2 = 0;
+        digitalWrite(6, LOW);
+      } else {
+        sinc2 = 1;
+        digitalWrite(6, HIGH);
+      }
+
+    } else if (sinc1 != sincAux) {
+
+      sinc1 = sincAux;
+
+      aux[0] = digitalRead(2);
+      aux[1] = digitalRead(3);
+      aux[2] = digitalRead(4);
+
+      transmitido[ptr2 - 1] = (aux[0] * 4) + (aux[1] * 2) + (aux[2]);
+      convertido[ptr2 - 1] = map(transmitido[ptr2 - 1], 0, 7, 0, 1023);
+      Serial.println(convertido[ptr2 - 1], DEC);
+
+      ptr2++;
+
+      if (sinc2 == 1) {
+        sinc2 = 0;
+        digitalWrite(6, LOW);
+      } else {
+        sinc2 = 1;
+        digitalWrite(6, HIGH);
+      }
+    }
+
+  }// if
+
+  delay(25);
+
+}// loop
